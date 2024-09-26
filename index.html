@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curtis James Lederle</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto Mono', monospace;
+            line-height: 1.6;
+            color: #ffffff;
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+        }
+        .content-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        h3 {
+            font-family: 'Inter', sans-serif;
+            color: #E67E22;
+            font-weight: 700;
+        }
+        .section {
+            margin-bottom: 150px;
+            margin-top: 150px;
+            border-bottom: none;
+            scroll-margin-top: 250px;
+        }
+        a {
+            color: #E67E22;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .sticky-top {
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            padding: 30px 0;
+        }
+        header p {
+            color: #E67E22;
+        }
+        .menu-toggle {
+            display: none; /* Hidden by default */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: auto;
+            align-self: center;
+        }
+        .hamburger {
+            width: 25px;
+            height: 3px;
+            background-color: #E67E22;
+            position: relative;
+            transition: all 0.3s ease-in-out;
+        }
+        .hamburger::before,
+        .hamburger::after {
+            content: '';
+            width: 25px;
+            height: 2px;
+            background-color: #E67E22;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease-in-out;
+        }
+        .hamburger::before {
+            top: -8px;
+        }
+        .hamburger::after {
+            top: 8px;
+        }
+        .menu-toggle.open .hamburger {
+            background-color: transparent;
+        }
+        .menu-toggle.open .hamburger::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+        .menu-toggle.open .hamburger::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-top: 150px;
+            margin-bottom: 150px;
+        }
+        .flex-item-large {
+            flex: 2;
+        }
+        .flex-item-small {
+            flex: 1;
+        }
+        .job, .education-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+        .job-content, .education-content {
+            flex: 2;
+            padding-right: 20px;
+        }
+        .job-image, .education-image {
+            flex: 1;
+            text-align: center;
+        }
+        .job-image img, .education-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .job h3, .education-item h3 {
+            margin-bottom: 10px;
+        }
+        .links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding-top: 20px;
+        }
+        .links a {
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            position: relative;
+            padding-right: 20px;
+        }
+        .links a::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: #E67E22;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .links a::after {
+            content: '';
+            position: absolute;
+            right: 5px;
+            top: 100%;
+            width: 1px;
+            height: 100%;
+            background-color: #E67E22;
+        }
+        .links a:last-child::after {
+            display: none;
+        }
+        .hero-image {
+            width: 100%;
+            max-width: 1200px; /* Set a maximum width for larger screens */
+            height: 500px; /* Adjust height as needed */
+            margin: 0 auto; /* Center the hero image */
+            overflow: hidden; /* Hide any overflow */
+            background-image: url('https://cdn.midjourney.com/7d02a0bd-9c54-41c7-8d69-bfdcc00b8795/0_2.png');
+            background-size: cover; /* Scale the image to cover the container */
+            background-position: center 65% ; /* Center the focal point */
+            background-repeat: no-repeat;
+            /* Remove background-attachment: fixed; */
+        }
+        .operating-functions {
+            font-size: 0.9em;
+        }
+        .operating-functions h3,
+        .flex-item-small h3 {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        .divider {
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(255, 255, 255, 0.75), rgba(0, 0, 0, 0));
+            margin: 10px 0;
+            margin-bottom: 50px;
+            margin-top: 50px;
+        }
+        .map-container {
+            width: 100%;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .with-key {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .key-circle {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .key-circle.orange {
+            background-color: #FFA500;
+        }
+        .key-circle.green {
+            background-color: #226122;
+        }
+        .substack-publications {
+        display: flex;
+        gap: 20px;
+        margin-top: 50px;
+        margin-bottom: 100px;
+        justify-content: space-between;
+        }
+        .publication {
+            flex: 1;
+            max-width: calc(50% - 10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .publication h4 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .publication iframe {
+            max-width: 100%;
+            border: none;
+            width: 100%;
+            height: 200px;
+            transform: scale(0.75);
+            transform-origin: top center;
+        }
+        .iframe-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .flex-item-small.grey-bg {
+            background-color:transparent !important;
+            padding: 1px;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .centered-heading {
+            text-align: center;
+        }
+        .skills-chart {
+            width: 75%;
+            max-width: none;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: transparent !important;
+        }
+        .skills-chart canvas {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            background: transparent !important;
+        }
+        /* Timeline styles */
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 0 20px 100px;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 1px;
+            background-color: #ffffff;
+            top: 0;
+            bottom: 0;
+            left: 30px;
+            margin-left: -1px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 50px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            background-color: #E67E22;
+            top: 25px;
+            left: -75px;
+        }
+        .timeline-date {
+            position: absolute;
+            left: -100px;
+            top: 15px;
+            font-weight: bold;
+            color: #d1d1d1;
+            background-color: #000;
+            padding: 15px 15px;
+            border-radius: 5px;
+            z-index: 1;
+        }
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: #111111;
+            border-radius: 6px;
+            margin-left: 100px;
+        }
+        .timeline-content h3 {
+            margin-top: 0;
+            color: #E67E22;
+        }
+        .timeline-content h4 {
+            margin-top: 0px;
+            font-style: normal;
+            color: #b9b9b9;
+        }
+        .timeline-duration {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .company-desc, .location {
+            font-size: 0.9em;
+            color: #888;
+        }
+        .responsibilities {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .responsibilities li {
+            margin-bottom: 5px;
+        }
+        .project-description {
+            color: #FFFFFF;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Asset grid styles */
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .asset-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .asset-item h4 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #E67E22;
+        }
+        .asset-item .file-name {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .asset-item .function {
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .asset-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .asset-link {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #E67E22;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .asset-link:hover {
+            background-color: #D35400;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+                position: relative;
+                left: -15px; /* Shift left by half the width of the hamburger (25px / 2) */
+                margin: 10px auto; /* Center the button */
+                padding: 0;
+                background: none;
+                border: none;
+                cursor: pointer;
+            }            
+            .links {
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+            .links.show {
+                display: flex;
+            }
+            .links a {
+                margin: 10px 0;
+                padding-right: 0;
+            }
+            .links a::before, .links a::after {
+                display: none;
+            }
+            .header-content {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                padding: 0;
+                margin: 0 auto;
+                width: 100%;
+            }
+            .hamburger {
+                width: 25px;
+                height: 3px;
+                background-color: #FFFFFF;
+                position: relative;
+                transition: all 0.3s ease-in-out;
+            }
+            .hamburger::before,
+            .hamburger::after {
+                background-color: #FFFFFF; /* Change color to white */
+            }
+            .timeline {
+                position: relative;
+                padding-left: 0px;
+            }
+            .timeline::after {
+                content: '';
+                position: absolute;
+                width: 2px;
+                background-color: #ffffff;
+                top: 0;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 1; /* Place the line behind other elements */
+            }
+            .timeline-item {
+                position: relative;
+                margin-bottom: 50px;
+            }
+            .timeline-date {
+                position: relative;
+                left: 0;
+                top: 0;
+                margin-bottom: 10px;
+                display: block;
+                text-align: center;
+                z-index: 2;
+            }
+            .timeline-content {
+                position: relative;
+                margin-left: 0; /* Remove left margin */
+                padding: 10px 20px; /* Adjust padding as needed */
+                z-index: 2;
+            }
+            .asset-grid {
+                grid-template-columns: 1fr;
+            }
+            .flex-container, .substack-publications {
+                flex-direction: column;
+            }
+            .publication, .job, .education-item {
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+            .publication iframe {
+                transform: none;
+                width: 100%;
+                height: auto;
+            }
+            .job-content, .education-content {
+                padding-right: 0;
+                margin-bottom: 15px;
+            }
+            .header-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            .links {
+                flex-direction: row;
+                justify-content: center;
+                width: 100%;
+                padding: 10px 0;
+            }
+            .links a {
+                margin: 0 10px;
+                padding-right: 0;
+            }
+            .links a::before, .links a::after {
+                display: none;
+            }
+            .flex-container {
+                flex-direction: column;
+            }
+            .operating-functions {
+                order: 2;
+            }
+            .flex-item-small {
+                order: 1;
+            }
+            .map-container {
+                height: 280px; /* Reduce height by 30% (400px * 0.7 = 280px) */
+            }
+            .skills-chart {
+                width: 100%;
+            }
+        }
+        footer {
+            background-color: #000;
+            color: #888;
+            padding: 20px 0;
+            text-align: center;
+        }
+        footer .footer-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        footer .footer-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        footer .footer-content .disclaimer {
+            font-size: 0.8em;
+            line-height: 1.4;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="sticky-top">
+        <div class="content-wrapper">
+            <div class="header-content">
+                <header>
+                    <h1>Curtis James Lederle</h1>
+                    <p> Invest | Build | Negotiate | Read </p>
+                </header>
+                <button class="menu-toggle" aria-label="Toggle menu">
+                    <span class="hamburger"></span>
+                </button>
+                <nav class="links">
+                    <a href="#about">About</a>
+                    <a href="#portfolio">Projects</a>
+                    <a href="#experience">Experience</a>
+                    <a href="#global-footprint">Map</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-image"></div>
+
+    <div class="content-wrapper">
+        <div class="main-content">
+            <div id="about" class="section">
+                <div class="flex-container">
+                    <div class="operating-functions">
+                        <p><u>Nature</u> 🧬 = curious + adaptable + driven to build</p>
+                        <p><u>Background</u> 🎓 = engineering + business + technology + finance</p>
+                        <p><u>Career</u> 🚀 = engineering > sales > management, startups + enterprise, B2B + B2C</p>
+                        <p><u>Passion</u> 🔥 = continuous learning, right now in AI and finance</p>
+                        <p><u>Balance</u> ⚖️ = professional pursuits ↔️ family life</p>
+                        <div class="divider"></div>
+                        <p>🌎 First principles approach exploring business, tools and the world around us </p>                       
+                        <p>🔬 Focused on research, development and investment in critical systems </p>
+
+                    </div>
+                    <div class="flex-item-small grey-bg">
+                        <div class="skills-chart">
+                            <canvas id="skillsChart"></canvas>
+                        </div>
+                    </div>             
+                </div>
+            </div>
+
+            <div class="divider"></div>
+            
+            <div id="portfolio" class="section">
+                <h2>Current Projects</h2>
+                <div class="subsection">
+                    <h3>AI Financial Analyst</h3>
+                    <p class="project-description">An AI-driven daily analysis of financial markets providing insights and trends.</p>
+                    <iframe src="market_analysis_embed.html" width="100%" height="600" style="border:0px solid #EEE; background:white;" frameborder="0" scrolling="yes"></iframe>
+                </div>
+                
+                <div class="divider"></div>
+
+                <div class="subsection">
+                    <h3>Substack</h3>
+                    <p class="project-description">Weekly newsletters covering insights on technology, finance, and AI advancements.</p>
+                    <div class="substack-publications">
+                        <div class="publication">
+                            <h4><a href="https://sojourninsight.substack.com" target="_blank">@sojourninsight</a></h4>
+                            <div class="iframe-container">
+                                <iframe src="https://sojourninsight.substack.com/embed" width="100%" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+                            </div>
+                        </div>
+                        <div class="publication">
+                            <h4><a href="https://sojournfinance.substack.com" target="_blank">@sojournfinance</a></h4>
+                            <div class="iframe-container">
+                                <iframe src="https://sojournfinance.substack.com/embed" width="100%" height="320" style="border:1px solid #EEE; background:white;" frameborder="0" scrolling="no"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <div id="experience" class="section">
+                <h2>Experience</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">2023 - Present</div>
+                        <div class="timeline-content">
+                            <h3>Sojourn Insight</h3>
+                            <h4>Think Tank | Research + Development</h4>
+                            <p class="location">📍 Minneapolis / Seoul</p>
+                            <ul class="responsibilities">
+                                <li>Partner</li>
+                                <li>Investment Committee</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2021 - 2024</div>
+                        <div class="timeline-content">
+                            <h3>Tread</h3>
+                            <h4>Tech Startup | Materials Logistics</h4>
+                            <p class="location">📍 San Francisco / Minneapolis / Toronto</p>
+                            <ul class="responsibilities">
+                                <li>Strategic Advisor</li>
+                                <li>Vice President Sales and Marketing</li>
+                                <li>Chief of Staff</li>
+                                <li>Head of Sales</li>
+                                <li>Regional General Manager</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2019 - 2020</div>
+                        <div class="timeline-content">
+                            <h3>Zendesk</h3>
+                            <h4>Public CRM | Communications</h4>
+                            <p class="location">📍 San Francisco / Singapore / Seoul</p>
+                            <ul class="responsibilities">
+                                <li>APAC Lead - Messaging</li>
+                                <li>Senior Account Executive</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2017 - 2019</div>
+                        <div class="timeline-content">
+                            <h3>Smooch.io</h3>
+                            <h4>Tech Startup | Omnichannel APIs</h4>
+                            <h4>(Aquired by Zendesk)</h4>
+                            <p class="location">📍 San Francisco / Montreal</p>
+                            <ul class="responsibilities">   
+                                <li>Director of Business Development</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-date">2013 - 2016</div>
+                        <div class="timeline-content">
+                            <h3>Enercon</h3>
+                            <h4>Private Manufacturer | Wind Turbines</h4>
+                            <p class="location">📍 Toronto / Montreal / Bremen / Berlin</p>
+                            <ul class="responsibilities">
+                                <li>Commercial Manager</li>
+                                <li>Commercial Analyst</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+
+            <div id="global-footprint" class="section">
+                <h2>Places</h2>
+                <h4 class="with-key"> <span class="key-circle orange"></span> home // work <span class="key-circle green"></span></h4>
+                <div class="map-container">
+                    <iframe
+                        width="100%"
+                        height="400"
+                        style="border:0"
+                        loading="lazy"
+                        allowfullscreen
+                        src="https://www.google.com/maps/d/embed?mid=1zxmaWJSYWse9hnR9XqLcT4ZFsHU7Jlc&hl=en&ehbc=2E312F"
+                    ></iframe>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // **Chart Initialization**
+        
+            let skillsChart;
+        
+            function createSkillsChart() {
+                const ctx = document.getElementById('skillsChart').getContext('2d');
+        
+                if (skillsChart) {
+                    skillsChart.destroy();
+                }
+        
+                skillsChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Negotiation','Sales','Ops','Analysis','AI','Code'],
+                        datasets: [{
+                            label: 'Skill Level',
+                            data: [95, 90, 85, 80, 65, 55],
+                            fill: true,
+                            backgroundColor: 'rgba(0, 0, 0, 0)', // Fully transparent
+                            borderColor: 'rgb(255, 255, 255)',
+                            pointBackgroundColor: 'rgb(255, 255, 255)',
+                            pointBorderColor: '#000000',
+                            pointHoverBackgroundColor: '#000000',
+                            pointHoverBorderColor: 'rgb(255, 255, 255)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        elements: {
+                            line: {
+                                borderWidth: 2
+                            }
+                        },
+                        scales: {
+                            r: {
+                                angleLines: {
+                                    display: false
+                                },
+                                suggestedMin: 0,
+                                suggestedMax: 100,
+                                ticks: {
+                                    stepSize: 20,
+                                    color: '#FFA500',
+                                    backdropColor: 'rgba(0, 0, 0, 0)' // Transparent backdrop
+                                },
+                                pointLabels: {
+                                    color: '#CCCCCC',
+                                    font: {
+                                        size: 16,
+                                        weight: 'bold'
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.35)' // Slightly visible grid lines
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        layout: {
+                            padding: 0
+                        },
+                        backgroundColor: 'transparent',
+                    },
+                    plugins: [{
+                        id: 'customCanvasBackgroundColor',
+                        beforeDraw: (chart, args, options) => {
+                            const {ctx} = chart;
+                            ctx.save();
+                            ctx.globalCompositeOperation = 'destination-over';
+                            ctx.clearRect(0, 0, chart.width, chart.height); // Clear the canvas
+                            ctx.restore();
+                        }
+                    }]
+                });
+            }
+        
+            // Initialize the chart
+            createSkillsChart();
+        
+            // **Navigation Menu Toggle**
+        
+            const menuToggle = document.querySelector('.menu-toggle');
+            const links = document.querySelector('.links');
+        
+            menuToggle.addEventListener('click', function() {
+                menuToggle.classList.toggle('open');
+                links.classList.toggle('show');
+            });
+        
+            // Close menu after clicking a link (on mobile)
+            document.querySelectorAll('.links a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (links.classList.contains('show')) {
+                        menuToggle.classList.remove('open');
+                        links.classList.remove('show');
+                    }
+                });
+            });
+        });
+    </script>
+        
+
+    <footer>
+        <div class="footer-content">
+            <img src="https://ghchart.rshah.org/sojourner-alpha" alt="GitHub Contributions Chart" />
+            <p class="disclaimer">
+                CJL | 2024
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
+
