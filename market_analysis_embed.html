@@ -1,0 +1,443 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Daily Risk Analysis</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333;
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+                transition: background-color 0.3s, color 0.3s;
+                background-color: #ffffff;
+            }
+            .title-container {
+                text-align: center;
+                margin-bottom: 20px;
+            }  
+            .title-container h1 {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .title-container h2 {
+                font-size: 14px;
+                font-weight: normal;
+                margin-top: 0;
+            }
+            .divider {
+                width: 100%;
+                max-width: 800px;
+                height: 2px;
+                background-image: linear-gradient(to right, transparent, black, transparent);
+                margin: 0 auto 50px;
+            }
+            body.dark-mode .divider {
+                background-image: linear-gradient(to right, transparent, white, transparent);
+            }
+            .container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 50px;
+            }
+            .risk-info {
+                width: 100%;
+                max-width: 40%;
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+            .metrics-tables {
+                width: 55%;
+            }
+            h1, h2 {
+                color: #2c3e50;
+                margin-top: 0;
+            }
+            .speedometer-container {
+                width: 300px;
+                height: 180px;
+                position: relative;
+                margin: 0 auto;
+            }
+            #speedometer {
+                width: 100%;
+                height: auto%;
+                display: block;
+                margin: 0 auto;
+                padding: 0;
+            }
+            .table-title {
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+            .risk-score {
+                position: absolute;
+                bottom: 10px;
+                left: 50%;
+                transform: translateX(-50%);
+                font-size: 24px;
+                font-weight: bold;
+            }
+            .risk-image-container {
+                width: 100%;
+                max-width: 300px;
+                margin-top: 20px;
+                position: relative;
+                padding-top: 56.25%;
+                overflow: hidden;
+                border-radius: 5px;                
+            }
+            .risk-image {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) scale(1.1);
+                width: 110%;
+                height: auto;
+                border-radius: 5px;
+                object-fit: cover;
+            }            
+            #darkModeToggle {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 10px;
+                background-color: #000000;
+                color: #f0f0f0;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 12px;
+                margin-bottom: 20px;
+                background: transparent;
+                background-color: transparent;
+            }
+            th, td {
+                padding: 8px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #f2f2f2;
+            }
+            .risk-on-table {
+                border-top: 3px solid #2ECC40;
+                background: transparent;
+            }
+            .risk-off-table {
+                border-top: 3px solid #FF4136;
+                background: transparent;
+            }
+            body.dark-mode {
+                background-color: #000000 !important;
+                color: #ffffff;
+            }
+            .dark-mode h1, .dark-mode h2 {
+                color: #f0f0f0;
+            }
+            .dark-mode th {
+                background-color: #2c3e50;
+                color: #f0f0f0;
+            }
+            .dark-mode td {
+                border-bottom: 1px solid #444;
+                color: #f0f0f0;
+            }
+            .dark-mode .risk-on-table {
+                border-top: 3px solid #2ECC40;
+            }
+            .dark-mode .risk-off-table {
+                border-top: 3px solid #FF4136;
+            }
+            .dark-mode table {
+                color: #f0f0f0;
+                background: transparent;
+            }
+            .dark-mode .dataTables_wrapper .dataTables_length,
+            .dark-mode .dataTables_wrapper .dataTables_filter,
+            .dark-mode .dataTables_wrapper .dataTables_info,
+            .dark-mode .dataTables_wrapper .dataTables_processing,
+            .dark-mode .dataTables_wrapper .dataTables_paginate {
+                color: #f0f0f0;
+                background: transparent;
+            }
+            .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button {
+                color: #f0f0f0 !important;
+            }
+            .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+            .dark-mode .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                color: #333 !important;
+                background: #f0f0f0 !important;
+            }
+            .dark-mode .even {
+                background-color: #2c3e50 !important;
+            }
+            .dark-mode .odd {
+                background-color: #34495e !important;
+            }
+            h1 a:hover {
+                text-decoration: underline;
+            }
+            #riskOnTable, #riskOffTable, .dataTables_wrapper {
+                background-color: transparent !important;
+            }
+            #riskOnTable tr, #riskOffTable tr {
+                background-color: transparent !important;
+            }
+            .dark-mode #riskOnTable tr, .dark-mode #riskOffTable tr {
+                color: #f0f0f0;
+            }
+            .metrics-tables-container {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            .table-wrapper {
+                width: 100%;
+                overflow-x: auto;
+            }
+            #riskOnTable, #riskOffTable {
+                width: 100%;
+                table-layout: fixed;
+            }
+            #riskOnTable th, #riskOffTable th,
+            #riskOnTable td, #riskOffTable td {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            #riskOnTable th:first-child, #riskOffTable th:first-child,
+            #riskOnTable td:first-child, #riskOffTable td:first-child {
+                width: 30%;
+            }
+            #riskOnTable th:not(:first-child), #riskOffTable th:not(:first-child),
+            #riskOnTable td:not(:first-child), #riskOffTable td:not(:first-child) {
+                width: 17.5%;
+            }
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .container {
+                    flex-direction: column;
+                    align-items: center;
+                }
+                .risk-info, .metrics-tables {
+                    width: 100%;
+                    max-width: 100%;
+                }
+                .risk-image-container {
+                    margin-top: 20px;
+                }
+            }
+            /* Footer Style */
+            .footer {
+                text-align: center;
+                font-size: 10px;
+                margin-top: 50px;
+                padding-bottom: 20px;
+            }
+        </style>
+    </head>
+    <body class="dark-mode">
+        <button id="darkModeToggle">light | dark</button>
+        <div class="title-container">
+            <h1><a href="https://sojournfinance.substack.com" target="_blank" style="text-decoration: none; color: inherit;">@sojournfinance</a></h1>
+            <h2>Last updated: Last updated on Thursday, September 26, 2024 at 10:17am</h2>
+        </div>
+        <div class="divider"></div>
+        <div class="container">
+            <div class="risk-info">
+                <h2>Indecision Sentiment</h2>                
+                <div class="speedometer-container">
+                    <div style="position: relative; width: 100%; height: 0; padding-bottom: 50%;">
+                        <canvas id="speedometer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
+                    </div>
+                    <div class="risk-score">Risk: 4.2/10</div>
+                </div>  
+                <!-- Moved the risk image back into the risk-info div -->
+                <div class="risk-image-container">
+                    <img src="https://cdn.midjourney.com/8a144ea8-91a3-424b-ab78-1d3bbfcd75bf/0_0.png" alt="Risk Image" class="risk-image">
+                </div>              
+            </div>
+            <div class="metrics-tables">
+                <div class="table-title">Sojourn Insight Metrics (SIMs)</div>
+                <div class="metrics-tables-container">
+                    <div class="table-wrapper">
+                        <table id="riskOnTable" class="risk-on-table">
+                            <thead>
+                                <tr>
+                                    <th><span style="color: #2ECC40;">RISK ON 📈</span></th>
+                                    <th>Current</th>
+                                    <th>1D %</th>
+                                    <th>1M %</th>
+                                    <th>1Y %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Copper</td><td>$4.61</td><td>+4.14%</td><td>+11.42%</td><td>+27.21%</td></tr><tr><td>Bitcoin USD Exchange Rate</td><td>$64,641.87</td><td>+2.37%</td><td>+9.51%</td><td>+146.56%</td></tr><tr><td>Russell 2000 ETF</td><td>$219.37</td><td>+0.77%</td><td>+3.81%</td><td>+27.39%</td></tr><tr><td>2-Year Treasury Yield</td><td>4.47%</td><td>-0.38%</td><td>-12.01%</td><td>-16.06%</td></tr><tr><td>S&P 500 ETF</td><td>$571.41</td><td>+0.24%</td><td>+3.63%</td><td>+35.98%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="riskOffTable" class="risk-off-table">
+                            <thead>
+                                <tr>
+                                    <th><span style="color: #FF4136;">RISK OFF 📉</span></th>
+                                    <th>Current</th>
+                                    <th>1D %</th>
+                                    <th>1M %</th>
+                                    <th>1Y %</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>VIX</td><td>15.78</td><td>+2.40%</td><td>+3.61%</td><td>-16.68%</td></tr><tr><td>Crude Oil</td><td>$68.10</td><td>-2.28%</td><td>-12.87%</td><td>-24.66%</td></tr><tr><td>Natural Gas</td><td>$2.58</td><td>-2.16%</td><td>+17.43%</td><td>-2.86%</td></tr><tr><td>Japanese Yen Exchange Rate</td><td>¥144.83</td><td>+1.31%</td><td>-2.94%</td><td>-2.67%</td></tr><tr><td>Gold</td><td>$2,687.70</td><td>+1.07%</td><td>+9.56%</td><td>+41.43%</td></tr><tr><td>10-Year Treasury Yield</td><td>3.79%</td><td>+0.34%</td><td>-3.36%</td><td>-16.76%</td></tr><tr><td>Euro Exchange Rate</td><td>$1.12</td><td>-0.15%</td><td>+1.84%</td><td>+5.50%</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="divider"></div>
+        <div class="analysis">
+            <h2>Summary</h2>
+            <p>Unable to generate market sentiment due to API error.</p>
+                        
+            <h2>Short-term Analysis</h2>
+            <p>Unable to generate short term risk due to API error.</p>
+            
+            <h2>Mid-term Analysis</h2>
+            <p>Unable to generate mid term analysis due to API error.</p>
+            
+            <h2>Closing Thoughts</h2>
+            <p>Unable to generate closing thoughts due to API error.</p>
+        </div>
+        <!-- Footer with Disclaimer -->
+        <div class="footer">
+            Disclaimer: This content is for informational purposes only and should not be considered as financial advice. Always conduct your own research and consult with a financial advisor before making investment decisions. This project is a work in process. Data may be delayed and parameters will change with time as we update our APIs, programs and manual operations. Meta-based analysis. Accuracy or correctness cannot be guaranteed.
+        </div>
+        <script>
+        // Speedometer
+        let speedometerChart;
+
+        function updateSpeedometer(darkMode) {
+            if (speedometerChart) {
+                speedometerChart.destroy();
+            }
+        
+            const speedometer = document.getElementById('speedometer').getContext('2d');
+            speedometerChart = new Chart(speedometer, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [1, 1, 1, 1, 1],
+                        backgroundColor: ['#FF4136', '#FF851B', '#FFDC00', '#A2D959', '#2ECC40'],
+                        borderWidth: 0
+                    }, {
+                        data: [4.2, 5.8],
+                        backgroundColor: [
+                            darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 1)', 
+                            darkMode ? 'rgba(128, 128, 128, 0.3)' : 'rgba(0, 0, 0, 0)'
+                        ],
+                        borderWidth: 0,
+                        circumference: 180,
+                        rotation: 270
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    rotation: -90,
+                    circumference: 180,
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false },
+                    },
+                    layout: {
+                        padding: {
+                            left: 20,
+                            right: 20,
+                            top: 0,
+                            bottom: 0
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize DataTables and set up dark mode toggle
+        $(document).ready(function() {
+            $('#riskOnTable, #riskOffTable').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                order: [[2, 'desc']],
+                stripeClasses: [],
+                columnDefs: [
+                    { width: '30%', targets: 0 },
+                    { width: '17.5%', targets: [1, 2, 3, 4] }
+                ],
+                autoWidth: false,
+                initComplete: function(settings, json) {
+                    $('#riskOnTable, #riskOffTable, .dataTables_wrapper').css('background-color', 'transparent');
+                    $('#riskOnTable tr, #riskOffTable tr').css('background-color', 'transparent');
+                }
+            });
+
+            // Check initial dark mode state
+            const initialDarkMode = $('body').hasClass('dark-mode');
+            updateSpeedometer(initialDarkMode);
+
+            // Dark mode toggle
+            $('#darkModeToggle').click(function() {
+                $('body').toggleClass('dark-mode');
+                updateSpeedometer($('body').hasClass('dark-mode'));
+                
+                // Reapply transparent background after dark mode toggle
+                $('#riskOnTable, #riskOffTable, .dataTables_wrapper').css('background-color', 'transparent');
+                $('#riskOnTable tr, #riskOffTable tr').css('background-color', 'transparent');
+            });
+
+            // Ensure transparency on window resize
+            $(window).resize(function() {
+                $('#riskOnTable, #riskOffTable, .dataTables_wrapper').css('background-color', 'transparent');
+                $('#riskOnTable tr, #riskOffTable tr').css('background-color', 'transparent');
+            });
+        });
+
+        // Format text
+        function formatText(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/- (.*?)\n/g, '<li>$1</li>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+        }
+        
+        document.querySelectorAll('.analysis p').forEach(p => {
+            p.innerHTML = formatText(p.textContent);
+        });
+        </script>
+    </body>
+    </html>
+    
