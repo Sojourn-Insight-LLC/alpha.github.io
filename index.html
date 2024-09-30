@@ -327,6 +327,19 @@
             top: 25px;
             left: -75px;
         }
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        .timeline-item:last-child::after {
+            content: '';
+            position: absolute;
+            width: 1px;
+            background-color: #000000; /* Same as your background color */
+            top: 25px;
+            bottom: 0;
+            left: -46px;
+            z-index: 1;
+        }
         .timeline-date {
             position: absolute;
             left: -100px;
@@ -489,15 +502,12 @@
                 padding-left: 0px;
             }
             .timeline::after {
-                content: '';
-                position: absolute;
-                width: 2px;
-                background-color: #ffffff;
-                top: 0;
-                bottom: 0;
                 left: 50%;
                 transform: translateX(-50%);
-                z-index: 1; /* Place the line behind other elements */
+            }
+            .timeline-item:last-child::after {
+                left: 50%;
+                transform: translateX(-50%);
             }
             .timeline-item {
                 position: relative;
@@ -740,7 +750,7 @@
                         <div class="timeline-date">Pre 2013</div>
                         <div class="timeline-content">
                             <h3>McGill University</h3>
-                            <h4>Civil Engineering and Applied Sciences</h4>
+                            <h4>Bachelor of Engineering - Civil </h4>
                             <p class="location">📍 Montreal</p>
                             <h3>Student Organizations</h3>
                             <h4>CSCE : Canadian Society for Civil Engineering</h4>
@@ -752,9 +762,6 @@
                             <ul class="responsibilities">       
                                 <li>VP External, National</li>
                                 <li>VP Entrepreneurship, McGill</li>
-                            </ul>
-                            <ul class="responsibilities">   
-                                <li>Internships</li>
                             </ul>
                         </div>
                     </div>
