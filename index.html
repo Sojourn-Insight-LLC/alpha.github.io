@@ -118,6 +118,16 @@
         .flex-item-small {
             flex: 1;
         }
+        .flex-item-small.grey-bg {
+            background-color:transparent !important;
+            padding: 1px;
+            border-radius: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
         .job, .education-item {
             display: flex;
             justify-content: space-between;
@@ -196,6 +206,15 @@
         .operating-functions {
             font-size: 0.9em;
         }
+        .operating-functions p {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+        }
+        .operating-functions p .emoji {
+            font-size: 2em;
+        }
         .operating-functions h3,
         .flex-item-small h3 {
             font-size: 1.1em;
@@ -236,11 +255,11 @@
             background-color: #226122;
         }
         .substack-publications {
-        display: flex;
-        gap: 20px;
-        margin-top: 50px;
-        margin-bottom: 100px;
-        justify-content: space-between;
+            display: flex;
+            gap: 20px;
+            margin-top: 50px;
+            margin-bottom: 100px;
+            justify-content: space-between;
         }
         .publication {
             flex: 1;
@@ -268,32 +287,22 @@
             justify-content: center;
             overflow: hidden;
         }
-
-        .flex-item-small.grey-bg {
-            background-color:transparent !important;
-            padding: 1px;
-            border-radius: 50px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
         .centered-heading {
             text-align: center;
         }
         .skills-chart {
-            width: 75%;
+            width: 100%;
             max-width: none;
-            margin: 10px auto;
+            margin: 20px auto;
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: transparent !important;
+            height: 400px; /* Set a fixed height for desktop */
         }
         .skills-chart canvas {
             max-width: 100% !important;
-            height: auto !important;
+            height: 100% !important;
             display: block;
             background: transparent !important;
         }
@@ -481,10 +490,16 @@
                 text-align: center;
                 width: 100%;
             }
-            .header-content h1,
+            .header-content h1 {
+                font-size: 1.5em; /* Reduce font size for mobile */
+                padding: 10px 0; /* Decrease padding for more screen space */
+            } 
             .header-content p {
                 text-align: center;
                 width: 100%;
+            }
+            header {
+                padding: 10px;
             }
             .hamburger {
                 width: 25px;
@@ -560,20 +575,18 @@
             .links a::before, .links a::after {
                 display: none;
             }
-            .flex-container {
-                flex-direction: column;
-            }
             .operating-functions {
                 order: 2;
             }
             .flex-item-small {
                 order: 1;
+                width: 100%;
             }
             .map-container {
                 height: 280px; /* Reduce height by 30% (400px * 0.7 = 280px) */
             }
             .skills-chart {
-                width: 100%;
+                height: 300px;
             }
         }
         footer {
@@ -626,15 +639,15 @@
         <div class="main-content">
             <div id="about" class="section">
                 <div class="flex-container">
-                    <div class="operating-functions">
-                        <p><u>Nature</u> 🧬 = curious + adaptable + driven to build</p>
-                        <p><u>Background</u> 🎓 = engineering + business + technology + finance</p>
-                        <p><u>Career</u> 🚀 = engineering > sales > management, startups + enterprise, B2B + B2C</p>
-                        <p><u>Passion</u> 🔥 = continuous learning, right now in AI and finance</p>
-                        <p><u>Balance</u> ⚖️ = professional pursuits ↔️ family life</p>
+                    <div class="flex-item-large operating-functions">
+                        <p><span class="emoji">🧬</span> curious + adaptable + driven to build</p>
+                        <p><span class="emoji">🎓</span> engineering + business + technology + finance</p>
+                        <p><span class="emoji">🚀</span> negotiation + sales + management; startups + enterprise</p>
+                        <p><span class="emoji">🔥</span> continuous learning in technology and AI</p>
+                        <p><span class="emoji">⚖️</span> professional pursuits ↔️ family life</p>
                         <div class="divider"></div>
-                        <p>🌎 First principles approach exploring business, tools and the world around us </p>                       
-                        <p>🔬 Focused on research, development and investment in critical systems </p>
+                        <p><span class="emoji">🔬</span> First principles approach to intellectual exploring </p>                       
+                        <p><span class="emoji">💼</span> AI think tank + investing + corporate consulting  </p>
                     </div>
                     <div class="flex-item-small grey-bg">
                         <div class="skills-chart">
